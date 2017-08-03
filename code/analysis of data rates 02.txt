@@ -1,0 +1,523 @@
+k: 10
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	1.811769281567323
+Average downstream bitrate [Mbps] at level 1 = 	18.258155595444556
+Average upstream bitrate [Mbps] at level 2 = 	42.420536754481510
+Average downstream bitrate [Mbps] at level 2 = 	46.702914550468456
+Average upstream delay [ms] at level 1 = 		2.00102
+Average downstream delay [ms] at level 1 = 		0.02343
+Average upstream delay [ms] at level 2 = 		7.21399
+Average downstream delay [ms] at level 2 = 		1.75973
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+        1627           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 30
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	4.759980401532123
+Average downstream bitrate [Mbps] at level 1 = 	16.630483109587541
+Average upstream bitrate [Mbps] at level 2 = 	35.074142517266523
+Average downstream bitrate [Mbps] at level 2 = 	37.734608881719474
+Average upstream delay [ms] at level 1 = 		0.60044
+Average downstream delay [ms] at level 1 = 		0.02813
+Average upstream delay [ms] at level 2 = 		3.28860
+Average downstream delay [ms] at level 2 = 		0.79390
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+        1579           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 50
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	6.984212836080704
+Average downstream bitrate [Mbps] at level 1 = 	16.116687076200659
+Average upstream bitrate [Mbps] at level 2 = 	38.625861408560311
+Average downstream bitrate [Mbps] at level 2 = 	41.405651655182076
+Average upstream delay [ms] at level 1 = 		0.40084
+Average downstream delay [ms] at level 1 = 		0.03055
+Average upstream delay [ms] at level 2 = 		1.87998
+Average downstream delay [ms] at level 2 = 		0.46096
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+        1413           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 80
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	9.372061748572090
+Average downstream bitrate [Mbps] at level 1 = 	16.273409994124368
+Average upstream bitrate [Mbps] at level 2 = 	46.570719591284202
+Average downstream bitrate [Mbps] at level 2 = 	50.641258207760856
+Average upstream delay [ms] at level 1 = 		0.24850
+Average downstream delay [ms] at level 1 = 		0.02933
+Average upstream delay [ms] at level 2 = 		0.90801
+Average downstream delay [ms] at level 2 = 		0.21993
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+   984     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 10
+k: 5
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	1.716584115647657
+Average downstream bitrate [Mbps] at level 1 = 	17.649753959493086
+Average upstream bitrate [Mbps] at level 2 = 	2071.735717219761200
+Average downstream bitrate [Mbps] at level 2 = 	2072.663489430728100
+Average upstream delay [ms] at level 1 = 		2.05772
+Average downstream delay [ms] at level 1 = 		0.02376
+Average upstream delay [ms] at level 2 = 		9.07778
+Average downstream delay [ms] at level 2 = 		2.28091
+Average upstream delay [ms] at top level = 		0.00103
+Average downstream delay [ms] at top level = 	0.00027
+Number of not attended:
+		UP			DOWN
+        1511           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 30
+k: 5
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	4.584055783737351
+Average downstream bitrate [Mbps] at level 1 = 	15.834786000018898
+Average upstream bitrate [Mbps] at level 2 = 	37.923639396898707
+Average downstream bitrate [Mbps] at level 2 = 	39.432924919834903
+Average upstream delay [ms] at level 1 = 		0.64796
+Average downstream delay [ms] at level 1 = 		0.02813
+Average upstream delay [ms] at level 2 = 		3.23463
+Average downstream delay [ms] at level 2 = 		0.83073
+Average upstream delay [ms] at top level = 		0.00103
+Average downstream delay [ms] at top level = 	0.00027
+Number of not attended:
+		UP			DOWN
+        1557           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 80
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	9.843239923985337
+Average downstream bitrate [Mbps] at level 1 = 	16.787664967980017
+Average upstream bitrate [Mbps] at level 2 = 	53.523541079007543
+Average downstream bitrate [Mbps] at level 2 = 	57.922939245846990
+Average upstream delay [ms] at level 1 = 		0.24195
+Average downstream delay [ms] at level 1 = 		0.02828
+Average upstream delay [ms] at level 2 = 		0.90669
+Average downstream delay [ms] at level 2 = 		0.22076
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+   985     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 120
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	11.815453160030479
+Average downstream bitrate [Mbps] at level 1 = 	16.760687509155304
+Average upstream bitrate [Mbps] at level 2 = 	47.821139905481957
+Average downstream bitrate [Mbps] at level 2 = 	52.005775520436636
+Average upstream delay [ms] at level 1 = 		0.19798
+Average downstream delay [ms] at level 1 = 		0.02947
+Average upstream delay [ms] at level 2 = 		0.60326
+Average downstream delay [ms] at level 2 = 		0.14655
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+   560     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 80
+k: 5
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	9.453498448795390
+Average downstream bitrate [Mbps] at level 1 = 	16.146183314556744
+Average upstream bitrate [Mbps] at level 2 = 	37.984773907300323
+Average downstream bitrate [Mbps] at level 2 = 	39.251501608139378
+Average upstream delay [ms] at level 1 = 		0.27483
+Average downstream delay [ms] at level 1 = 		0.03152
+Average upstream delay [ms] at level 2 = 		1.28228
+Average downstream delay [ms] at level 2 = 		0.33236
+Average upstream delay [ms] at top level = 		0.00103
+Average downstream delay [ms] at top level = 	0.00027
+Number of not attended:
+		UP			DOWN
+        1164           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 120
+k: 5
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	11.970588733738653
+Average downstream bitrate [Mbps] at level 1 = 	16.990362068963577
+Average upstream bitrate [Mbps] at level 2 = 	37.817428042767808
+Average downstream bitrate [Mbps] at level 2 = 	39.127291385253031
+Average upstream delay [ms] at level 1 = 		0.18860
+Average downstream delay [ms] at level 1 = 		0.02868
+Average upstream delay [ms] at level 2 = 		0.83829
+Average downstream delay [ms] at level 2 = 		0.21503
+Average upstream delay [ms] at top level = 		0.00103
+Average downstream delay [ms] at top level = 	0.00027
+Number of not attended:
+		UP			DOWN
+   827     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 80
+k: 10
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	13.647007340300402
+Average downstream bitrate [Mbps] at level 1 = 	20.493364138654140
+Average upstream bitrate [Mbps] at level 2 = 	35.445411486147862
+Average downstream bitrate [Mbps] at level 2 = 	35.841682640205065
+Average upstream delay [ms] at level 1 = 		0.28202
+Average downstream delay [ms] at level 1 = 		0.03023
+Average upstream delay [ms] at level 2 = 		1.45113
+Average downstream delay [ms] at level 2 = 		0.37739
+Average upstream delay [ms] at top level = 		0.00051
+Average downstream delay [ms] at top level = 	0.00014
+Number of not attended:
+		UP			DOWN
+        1165           0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 120
+k: 10
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	11.177228260339758
+Average downstream bitrate [Mbps] at level 1 = 	16.108098158221587
+Average upstream bitrate [Mbps] at level 2 = 	38.546216024521343
+Average downstream bitrate [Mbps] at level 2 = 	38.992996278151558
+Average upstream delay [ms] at level 1 = 		0.19654
+Average downstream delay [ms] at level 1 = 		0.02944
+Average upstream delay [ms] at level 2 = 		0.94636
+Average downstream delay [ms] at level 2 = 		0.24868
+Average upstream delay [ms] at top level = 		0.00051
+Average downstream delay [ms] at top level = 	0.00014
+Number of not attended:
+		UP			DOWN
+   844     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 80
+Operation terminated by user during k_means (line 51)
+
+
+In k_means_multiple_trials (line 45)
+  [c, means, x_dists] = k_means(x,k,max_iter,false);
+
+In main_k_means (line 25)
+[c_m, means_m, x_dists_m] = k_means_multiple_trials(x, k, no_trials, max_iter,
+show_graphics);
+
+In my_cluster (line 59)
+            [c_m, means_m, x_dists_m] = main_k_means(x_temp',k,false, trials2run,
+            Inf);
+
+In main (line 38)
+    for lvl = 1:clustering_levels
+ 
+>> 
+k: 200
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	18.311705498093804
+Average downstream bitrate [Mbps] at level 1 = 	21.489626423983164
+Average upstream bitrate [Mbps] at level 2 = 	52.309638131851131
+Average downstream bitrate [Mbps] at level 2 = 	56.940205958157783
+Average upstream delay [ms] at level 1 = 		0.15060
+Average downstream delay [ms] at level 1 = 		0.02937
+Average upstream delay [ms] at level 2 = 		0.36080
+Average downstream delay [ms] at level 2 = 		0.08707
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+   323     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 400
+k: 3
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	128.401669943749340
+Average downstream bitrate [Mbps] at level 1 = 	129.793920499863790
+Average upstream bitrate [Mbps] at level 2 = 	49.460371852816287
+Average downstream bitrate [Mbps] at level 2 = 	53.770448425830956
+Average upstream delay [ms] at level 1 = 		0.12485
+Average downstream delay [ms] at level 1 = 		0.02868
+Average upstream delay [ms] at level 2 = 		0.17924
+Average downstream delay [ms] at level 2 = 		0.04331
+Average upstream delay [ms] at top level = 		0.00171
+Average downstream delay [ms] at top level = 	0.00045
+Number of not attended:
+		UP			DOWN
+    62     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 300
+k: 4
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	36.442509491189107
+Average downstream bitrate [Mbps] at level 1 = 	38.461093789863725
+Average upstream bitrate [Mbps] at level 2 = 	42.337607181952819
+Average downstream bitrate [Mbps] at level 2 = 	44.491814339810738
+Average upstream delay [ms] at level 1 = 		0.13226
+Average downstream delay [ms] at level 1 = 		0.02898
+Average upstream delay [ms] at level 2 = 		0.29323
+Average downstream delay [ms] at level 2 = 		0.07369
+Average upstream delay [ms] at top level = 		0.00128
+Average downstream delay [ms] at top level = 	0.00034
+Number of not attended:
+		UP			DOWN
+   164     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 400
+k: 4
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	128.401669943749340
+Average downstream bitrate [Mbps] at level 1 = 	129.793920499863790
+Average upstream bitrate [Mbps] at level 2 = 	42.260033560249084
+Average downstream bitrate [Mbps] at level 2 = 	44.405659702252144
+Average upstream delay [ms] at level 1 = 		0.12485
+Average downstream delay [ms] at level 1 = 		0.02868
+Average upstream delay [ms] at level 2 = 		0.21774
+Average downstream delay [ms] at level 2 = 		0.05433
+Average upstream delay [ms] at top level = 		0.00128
+Average downstream delay [ms] at top level = 	0.00034
+Number of not attended:
+		UP			DOWN
+   104     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 400
+k: 2
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	128.401669943749340
+Average downstream bitrate [Mbps] at level 1 = 	129.793920499863790
+Average upstream bitrate [Mbps] at level 2 = 	52.292244803295425
+Average downstream bitrate [Mbps] at level 2 = 	60.614145302268746
+Average upstream delay [ms] at level 1 = 		0.12485
+Average downstream delay [ms] at level 1 = 		0.02868
+Average upstream delay [ms] at level 2 = 		0.16512
+Average downstream delay [ms] at level 2 = 		0.03626
+Average upstream delay [ms] at top level = 		0.00256
+Average downstream delay [ms] at top level = 	0.00068
+Number of not attended:
+		UP			DOWN
+    43     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 400
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	103.622964349237610
+Average downstream bitrate [Mbps] at level 1 = 	105.054100740850770
+Average upstream bitrate [Mbps] at level 2 = 	66.984623799900234
+Average downstream bitrate [Mbps] at level 2 = 	177.077306541904330
+Average upstream delay [ms] at level 1 = 		0.13507
+Average downstream delay [ms] at level 1 = 		0.03046
+Average upstream delay [ms] at level 2 = 		0.12153
+Average downstream delay [ms] at level 2 = 		0.01024
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+    34     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 400
+Operation terminated by user during k_means (line 51)
+
+
+In k_means_multiple_trials (line 45)
+  [c, means, x_dists] = k_means(x,k,max_iter,false);
+
+In main_k_means (line 25)
+[c_m, means_m, x_dists_m] = k_means_multiple_trials(x, k, no_trials, max_iter,
+show_graphics);
+
+In my_cluster (line 59)
+            [c_m, means_m, x_dists_m] = main_k_means(x_temp',k,false, trials2run,
+            Inf);
+
+In main (line 34)
+  clustering = my_cluster(technique, clustering_levels, k_set, coords, trials2run,
+  CONFIG.show);
+ 
+>> 
+k: 500
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	207.999249045480950
+Average downstream bitrate [Mbps] at level 1 = 	209.034493508586000
+Average upstream bitrate [Mbps] at level 2 = 	63.774980399737139
+Average downstream bitrate [Mbps] at level 2 = 	173.463658990572130
+Average upstream delay [ms] at level 1 = 		0.11913
+Average downstream delay [ms] at level 1 = 		0.02809
+Average upstream delay [ms] at level 2 = 		0.09715
+Average downstream delay [ms] at level 2 = 		0.00819
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+     3     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 550
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	307.658633171338240
+Average downstream bitrate [Mbps] at level 1 = 	308.554336851580730
+Average upstream bitrate [Mbps] at level 2 = 	63.719680332883833
+Average downstream bitrate [Mbps] at level 2 = 	173.394915095386380
+Average upstream delay [ms] at level 1 = 		0.11913
+Average downstream delay [ms] at level 1 = 		0.02823
+Average upstream delay [ms] at level 2 = 		0.08833
+Average downstream delay [ms] at level 2 = 		0.00745
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+     3     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 700
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	523.465955839859360
+Average downstream bitrate [Mbps] at level 1 = 	524.111962890456880
+Average upstream bitrate [Mbps] at level 2 = 	64.700935776182149
+Average downstream bitrate [Mbps] at level 2 = 	174.423806736916390
+Average upstream delay [ms] at level 1 = 		0.11149
+Average downstream delay [ms] at level 1 = 		0.02674
+Average upstream delay [ms] at level 2 = 		0.06944
+Average downstream delay [ms] at level 2 = 		0.00586
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+     8     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 525
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	266.049659215082500
+Average downstream bitrate [Mbps] at level 1 = 	267.001683251439090
+Average upstream bitrate [Mbps] at level 2 = 	63.609604535334981
+Average downstream bitrate [Mbps] at level 2 = 	173.268387357636580
+Average upstream delay [ms] at level 1 = 		0.11936
+Average downstream delay [ms] at level 1 = 		0.02843
+Average upstream delay [ms] at level 2 = 		0.09253
+Average downstream delay [ms] at level 2 = 		0.00780
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+     4     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+k: 450
+k: 1
+clustering technique: k-means
+Average upstream bitrate [Mbps] at level 1 = 	165.871309407466900
+Average downstream bitrate [Mbps] at level 1 = 	167.064557560017110
+Average upstream bitrate [Mbps] at level 2 = 	63.703766017384197
+Average downstream bitrate [Mbps] at level 2 = 	173.392899932235790
+Average upstream delay [ms] at level 1 = 		0.12255
+Average downstream delay [ms] at level 1 = 		0.02840
+Average upstream delay [ms] at level 2 = 		0.10798
+Average downstream delay [ms] at level 2 = 		0.00911
+Average upstream delay [ms] at top level = 		0.00513
+Average downstream delay [ms] at top level = 	0.00136
+Number of not attended:
+		UP			DOWN
+     9     0
+
+technology: wimax
+technology: wimax
+=====================================================
+
+>> 

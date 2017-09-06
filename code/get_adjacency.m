@@ -1,46 +1,51 @@
 function data_rates = get_adjacency(positions, clustering, ANTENNAS, CONFIG, clustering_level, up1_down2)
-%%
-%% INPUT
-% 	clustering.membership
-% 	clustering.coordsI
-% 	clustering.coordsJ
+% INPUT
+%   positions     Coordinates of current level of the communication
+%                 network. For example of all users of all macro cells etc.
+%                 [n, 2] dim vector.
+%   clustering    The results of clustering. Cells of structures reporting
+%                 about the clusterization at each level. clustering{1} 
+%                 stores the original positions in variable CH_coords, 
+%                 next_k, and idx Results of first
+%                 clusterization are performed on the original data and
+%                 are stored in clustering{2}. This might change in the
+%                 future and it would be stored at clustering{1}. 
+%     .CH_coords  [n, 2] dim vector of positions of nodes at the level {i}
+%     .memberships  vector dim [n, 1] of memberships that indicates to which
+%                 cluster do all of n cluster heads from previous level
+%                 belong to.
+%     .next_k     scalar - the next value of k - used only during clustering (not here)
+%     .idx        vector dim [1, some] - index of this specifc clustering.
+%                 Serves as an ID and is an unused variable
+%     .k_history  vector dim [1, i_k] of all of the the previous k values used
+%                 
+%   ANTENNAS      values of antennas and equipment defined in configuration.m
+%   CONFIG        other model definitions from configuration.m
+%   clustering_level  the clustering level of these positions. Value i
+%                 indicates one clustering was performed, nodes have their
+%                 positions at clustering{i}.CH_coords and their cluster
+%                 heads are at clustering{i+1}.CH_coords. Cluster
+%                 memberships for each node are at
+%                 clustering{i+1}.memberships
+%   up1_down2     indicates stream mode - value 1 for upstream, 2 for downstream
 
 % OUTPUT
-% 	AdjacencyMat	MxN adjacency matrix where values indicate
+% 	data_rates  	MxN adjacency matrix where values indicate
 %					        data rates in kilobits per second (kbps). The matrix
 %                 is non-symmetrical as different antenna values should
 %                 be used for upstream and downstream (over and under
 %                 the main diagonal respectively)
-%function [data_rates,max_receiving_rates,uniqueK_idx] = get_data_rates_kbps(positions,k,cluster_idx,micros_xy,network_technology)
-%% INPUT
-% positions         x,y coordinates of [sink; clients]
-% cluster_idx       vector saying which cluster is each client belonging to
-% network_technology  network technology of communication - possible inputs are
-%                     '802.11g', 'WiMAX', 'LTE4G'
-%% OUTPUT
-% data_rates        data rates in kilobits per second - kbps in a symmetric
-%                   matrix NxN with zeros on main diagonal
-% max_rcv_rates     maximum stream of kbps that device with selected
-%                   technology is able to receive and process
 
 % ISO model of network
 
-%%
+%
 % micro vector
 % micro(i).deployed, id, radiated_power
 % antenna.id, band
-%% TODO - missing:
-% antennna.band
-% frequency
-% micros, antenna .micro_radiated_power
 
-%%
 micros_positions = clustering{clustering_level+1}.CH_coords(:,1:2);
 cluster_idx = clustering{clustering_level+1}.memberships;
 k = clustering{clustering_level+1}.k_history(end); % take the last k from the list - clustering.k stores all ks in the hierarchy of clustering levels
-%addpath 'ALTERADO_2'
-% 1 bit/ms = 1 kbps
-% 1e3 = 1Mbps
 n_data = size(positions,1);
 n_micros = size(micros_positions,1);
 % if nargin == 4
@@ -65,153 +70,85 @@ end
 
 % Rememinder: level is (n+1). That is: 1 for no clustering, 2 for
 % one clustering, etc.
-
+hop_idx = clustering_level-1+up1_down2; % 1 for 1st level (user/IED <-> small cell), 2 for 2nd level (small cell <-> macro) etc.
 freq = ANTENNAS.technology{clustering_level}.frequency; % [Hz]
-antenna.radiated_power = ANTENNAS.technology{clustering_level}.radiated_power.equipment{clustering_level-1+up1_down2}; % [dBm]
+antenna.radiated_power = ANTENNAS.technology{clustering_level}.radiated_power.equipment{hop_idx}; % [dBm]
 antenna.band = ANTENNAS.technology{clustering_level}.bandwidth; % [Hz]
-
-
-% if      level == 2 && up1_down2 == 1
-%   % Antenna 1 transmitting - CPE
-%   if strcmp('wifi', network_technology)
-%     freq = ANTENNAS.wifi.frequency.level1_2; % [MHz]
-%     antenna.radiated_power = ANTENNAS.wifi.radiated_power.cpe; % [dBm]
-%     antenna.band = ANTENNAS.wifi.bandwidth.level1_2; % [Hz]
-%   elseif strcmp('wimax', network_technology)
-%     freq = ANTENNAS.wimax.frequency.level1_2; % [MHz]
-%     antenna.radiated_power = ANTENNAS.wimax.radiated_power.cpe; % [dBm]
-%     antenna.band = ANTENNAS.wimax.bandwidth.level1_2; % [Hz]
-%   end
-%
-% elseif (level == 2 && up1_down2 == 2) || (level == 3 && up1_down2 == 1)
-%   % Antenna 2 transmitting - small cell
-%   if strcmp('wifi', network_technology)
-%     if up1_down2 == 2 % downstream
-%       freq = ANTENNAS.wifi.frequency.level1_2; % [MHz]
-%       antenna.band = ANTENNAS.wifi.bandwidth.level1; % [Hz]
-%     else % upstream
-%       freq = ANTENNAS.wifi.frequency.level2_3; % [MHz]
-%       antenna.band = ANTENNAS.wifi.bandwidth.level2_3; % [Hz]
-%     end
-%     antenna.radiated_power = ANTENNAS.wifi.radiated_power.small_cell; % [dBm]
-%   elseif strcmp('wimax', network_technology)
-%     if up1_down2 == 2 % downstream
-%       freq = ANTENNAS.wimax.frequency.level1_2; % [MHz]
-%       antenna.band = ANTENNAS.wimax.bandwidth.level1_2; % [Hz]
-%     else % upstream
-%       freq = ANTENNAS.wimax.frequency.level2_3; % [MHz]
-%       antenna.band = ANTENNAS.wimax.bandwidth.level2_3; % [Hz]
-%     end
-%     antenna.radiated_power = ANTENNAS.wimax.radiated_power.small_cell; % [dBm]
-%   end
-%
-% elseif  level == 3 && up1_down2 == 2
-%   % Antenna 3 transmitting - macro cell
-%   if strcmp('wifi', network_technology)
-%     freq = ANTENNAS.wifi.frequency.level2_3;
-%     antenna.radiated_power = ANTENNAS.wifi.radiated_power.macro_cell; % [dBm]
-%     antenna.band = ANTENNAS.wifi.bandwidth.level2_3; % [Hz]
-%   elseif strcmp('wimax', network_technology)
-%     freq = ANTENNAS.wimax.frequency.level2_3; % [MHz]
-%     antenna.radiated_power = ANTENNAS.wimax.radiated_power.macro_cell; % [dBm]
-%     antenna.band = ANTENNAS.wimax.bandwidth.level2_3; % [Hz]
-%   end
-%
-% else
-%   error('Unexpected level: %d, up1_down2: %d', level, up1_down2)
-% end
 micro_radiated_power = antenna.radiated_power; % [dBm]
 
-% add other devices/antennas on the same level as 'antenna'. That layer is
-% one level/hop closer to the sink/server
-for i = 1:n_micros
-  micros(i).id = i;
-  micros(i).xy = micros_positions(i,:);
-  micros(i).deployed = deployed_micros(i);
-  micros(i).radiated_power = micro_radiated_power;
-end
-
-
-n_micros_added = n_micros;
-interference_from_other_lvls = 1;
-if interference_from_other_lvls
-  for c_lvl = 1:size(clustering,2)-1
-    if c_lvl==clustering_level && up1_down2 == 2 % do not add the same micros from the same level
-      continue
-    end
-    if c_lvl==size(clustering,2)-1 && up1_down2 == 1 % last level and upstream (nowhere to send data in this model)
-      continue
-    end
-    if c_lvl == 1 && up1_down2 == 1 %equal to c_lvl-1+up1_down2 == 1 % skip interference caused by all the end users (at the lowest level)
-      continue
-    end
-    if ANTENNAS.technology{clustering_level}.frequency ~= ANTENNAS.technology{c_lvl}.frequency
-      continue % no interference if the frequency is different
-    end
-
-    micros_at_lvl = clustering{c_lvl-1+up1_down2}.CH_coords(:,1:2);
-    for i = 1:size(micros_at_lvl,1)
-      micros(i+n_micros_added).id = i+n_micros_added;
-      micros(i+n_micros_added).xy = micros_at_lvl(i,:);
-      micros(i+n_micros_added).deployed = 1;
-      micros(i+n_micros_added).radiated_power = ANTENNAS.technology{c_lvl}.radiated_power.equipment{c_lvl-1+up1_down2};
-    end
-    n_micros_added = n_micros_added+i;
+n_micros_added = 0;
+micros = [];
+% coordinates of all nodes at the current level (which is the same as
+% 'positions' variable. It is the lower communication level of the two
+% neighbors. That would be either end users or micros.
+all_micros_disabled_for_interference = 1;
+if up1_down2 == 1
+  all_micros_disabled_for_interference = 0;
+  coords_at_lvl = clustering{clustering_level}.CH_coords(:,1:2);
+  for i = 1:size(coords_at_lvl,1)
+    micros(i+n_micros_added).id = i+n_micros_added;
+    micros(i+n_micros_added).xy = coords_at_lvl(i,:);
+    % let us deploy only those which share the same frequency - same
+    % cluster and same level. We will use different frequency band per
+    % cluster. For now undeploy all and turn them on when we know which
+    % cluster are we dealing with when we select our 'user'
+    micros(i+n_micros_added).deployed = 0;
+    micros(i+n_micros_added).radiated_power = ANTENNAS.technology{clustering_level}.radiated_power.equipment{hop_idx};
   end
+  n_micros_added = n_micros_added+i;
 end
-
-% clustering_size = size(clustering,2);
-% n_micros_added = 0;
-% last_lvl = 0;
-% for lvl = 1:clustering_size
-%   if lvl == clustering_size
-%     last_lvl = 1;
-%   end
-%   if sum(lvl == CONFIG.not_consider_i_interf_levels) == 0 % if I should not consider this level's interference, this does not pass
-%     if freq == ANTENNAS.technology{lvl-last_lvl}.frequency % same frequency -> interference
-%       micros_at_lvl = clustering{lvl}.CH_coords(:,1:2);
-%       for i = 1:size(micros_at_lvl,1)
-%         micros(i+n_micros_added).id = i+n_micros_added;
-%         micros(i+n_micros_added).xy = micros_at_lvl(i,:);
-%         micros(i+n_micros_added).deployed = 1;
-%         micros(i+n_micros_added).radiated_power = ANTENNAS.technology{lvl-last_lvl}.radiated_power.equipment{lvl-1+up1_down2-last_lvl};
-%       end
-%       n_micros_added = n_micros_added+i;
-%     end
-%   end
-% end
-
-
 
 % ====== use adjacency here, pdist, some function
 data_rates = zeros(n_data,k);
 multipath = false;
 if size(cluster_idx,2)>1; multipath = true; end
 for i = 1:n_data
+ % fprintf('%d of %d: ', i, n_data)
+  %every time make sure all is undeployed = ready & clean to use
+  cells0 = num2cell(zeros(size(micros,2),1));
+  cells1 = num2cell(ones(size(micros,2),1));
+  if size(micros,1) ~= 0
+    [micros.deployed] = cells0{:}; % this functinality is summarized as disperse fun
+  end
   if ~multipath
     user.xy = positions(i,:);
-    user_micro = 0;
+    %user_micro = 0;
+    current_cluster_members_idx = clustering{clustering_level+1}.memberships == cluster_idx(i); % TODO this is weird - memberships should be together with original locations. Or not?
+    if ~all_micros_disabled_for_interference
+      [micros(current_cluster_members_idx).deployed] = cells1{1:sum(current_cluster_members_idx)};
+    else
+      current_cluster_members_idx = [];
+    end
     antenna.xy = micros_positions(cluster_idx(i),:);
-    antenna.id = 0;
+    antenna.id = n_micros_added+1;
     for i_micro = 1:size(micros,2)
       if micros(i_micro).xy == user.xy
         user_micro = i_micro;
+        micros(user_micro).deployed = 0; % we do not want interference to be caused by our user
       end
       if micros(i_micro).xy == antenna.xy
         antenna.id = i_micro;
       end
     end
-    if user_micro ~= 0
-      micros(user_micro).deployed = 0;
-    end
+
+    % not always user's equipment is among those in a list that cause
+    % interference. But when it is, undeploy it, calculate channel and turn
+    % it back on (some lines below at the end of the for loop) so that it
+    % is set as "deployed" for interference calculations for other users.
+%     if user_micro ~= 0
+%       micros(user_micro).deployed = 0; % actually we won't use it since
+%       we keep all micros' deployed at 0 and only turn on some.
+%     end
     if antenna.id == 0
       error('antenna_id is %d',antenna.id)
     end
     
-    
-    j = antenna.id;
-    [data_rates(i,j),~,~,inter] = calculateChannel(user,antenna,freq,micros);
-    interf(i,:) = inter;
+%     if cluster_idx(i) == 12
+%       fprintf('12\n')
+%     end
+    j = cluster_idx(i);
+    [data_rates(i,j),~,~,inter] = calculateChannel(user,antenna,freq,micros(current_cluster_members_idx));
+    %interf(i,:) = inter; different size every time
     %         disp([user.xy antenna.xy])
     %         disp([i j data_rates(i,j)])
     %     if isnan(data_rates(i,j))
@@ -221,18 +158,12 @@ for i = 1:n_data
     %         calculateChannel(user,antenna,freq,micros)
     %     end
   else
-    error('not implemented and tested branch.')
-    for ii = 1:size(cluster_idx,2)
-      antenna.id = cluster_idx(i,ii);
-      j = antenna.id;
-      antenna.xy = micros_positions(antenna.id,:);
-      data_rates(i,j) = calculateChannel(user,antenna,freq,micros);
-    end
+    error('not implemented and tested branch. Refer to previous versions (june2017) for ideas')
   end
-  if user_micro ~= 0
-    micros(user_micro).deployed = 1;
-  end
+
+%   if user_micro ~= 0
+%     micros(user_micro).deployed = 1;
+%   end
 end
 data_rates(data_rates==Inf) = CONFIG.DIRECT_LINK_DATA_RATE_ON_SITE;
-% data_rates = 700e3./adj;
 end

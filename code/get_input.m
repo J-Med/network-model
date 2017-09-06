@@ -1,7 +1,7 @@
 function [coords, maxDelays, bitsIn] = get_input(scenario)
   scenarioSize = str2num(scenario);
 % OUTPUTS
-% coords        2D coordinates of clients - size dim*scenarioSize
+% positions     2D coordinates of clients - size dim*scenarioSize
 % maxDelays     maximum delays allowed for upstream (first col) and
 %               downstream (second column) - size 2*scenarioSize
 % bitsIn        bits to be transfered for upstream (first col) and
@@ -57,8 +57,8 @@ else
   sink_xy = [0,0];
   offset = sink_xy;
 
-  bitsIn =    bitsIn__maxDelays(:,1:2);
-  maxDelays = bitsIn__maxDelays(:,3:4);
+  bitsIn =    data__maxDelays(:,1:2);
+  maxDelays = data__maxDelays(:,3:4);
 
   sink_idx = 1;
 
@@ -102,14 +102,14 @@ else
 
   pos_650 = offset;
 
-  positions = zeros(size(distances,1),2);
-  positions(1,:) = pos_650;
+  coords = zeros(size(distances,1),2);
+  coords(1,:) = pos_650;
   count_set = 1;
   for i = 1:size(distances,1)
       tmp_dists = cell2mat(distances{i});
       tmp_dirs  = cell2mat(directions{i});
       for j = 1:size(tmp_dists,2)
-          positions(count_set+1,:) = next_position(positions(i,:),tmp_dirs(j,:),tmp_dists(j));
+          coords(count_set+1,:) = next_position(coords(i,:),tmp_dirs(j,:),tmp_dists(j));
           count_set = count_set+1;
       end
   end 

@@ -22,9 +22,6 @@ run configuration
 divide_per_bit = 1; %!!!!!!! this parameter needs to be changed in calc_delays_plot_topology, not here. It's here just as a reference
 n_items = size(coords,1);
 
-cluster_config = [50 1; 50 2; 100 1; 100 2; 200 1; 200 2; 300 1; 300 2];
-cluster_config = [400 1];
-
 %% Start clustering
 for i_cluster_config = 1:size(cluster_config,1)
   k_set{1} = cluster_config(i_cluster_config,1);

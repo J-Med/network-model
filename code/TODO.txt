@@ -1,8 +1,4 @@
 get_adjacency
-review code, especially section that begins at line 186 and 126, add comments
-
-get to know who can cause interference and make it easy to change and understand
-
 k-means with exponential kernel
 
 fiber optic speeds (Marcelino, Diego)

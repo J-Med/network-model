@@ -1,7 +1,12 @@
 function analyze_results(technique, technology, maxDelays, delays, bits, Adjacency_mat_up, Adjacency_mat_down, clustering, CONFIG)
 % Shows results on cmd line. In future will do some analysis.
 
+fprintf('%d nodes\n', size(maxDelays,1));
 fprintf('clustering technique: %s\n',technique{:})
+for i_tech = 1:size(technology,2)
+  fprintf('technology %d: %s\n', i_tech, technology{i_tech}.name)
+end
+
 %[bits_in(:,1) delays(:,1) maxDelays(:,1) delays(:,1)>maxDelays(:,1)]
 tab1 = [bits{1,1} bits{2,1} delays maxDelays delays>maxDelays];
 %tab1(bits{1,1}==1665,:)
@@ -16,22 +21,18 @@ for i = 1:size(Adjacency_mat_up, 2)-1
   speed_mat = repmat(bits{1,i},1,n_cols)./(Adjacency_mat_up{i+1}*1024);
   speed_mat(isnan(speed_mat))=0;
   speed_mat(speed_mat==Inf)=0;
-  fprintf(  'Average upstream delay [ms] at level %d = \t\t%.5f\n', i, mean(sum(speed_mat,2))*1000)
+  fprintf(  'Average upstream delay [ms] at level %d = \t%.5f\n', i, mean(sum(speed_mat,2))*1000)
   speed_mat = repmat(bits{2,i},1,n_cols)./(Adjacency_mat_down{i+1}*1024);
   speed_mat(isnan(speed_mat))=0;
   speed_mat(speed_mat==Inf)=0;
-  fprintf('Average downstream delay [ms] at level %d = \t\t%.5f\n', i, mean(sum(speed_mat,2))*1000)
+  fprintf('Average downstream delay [ms] at level %d = \t%.5f\n', i, mean(sum(speed_mat,2))*1000)
 end
-  fprintf('Average upstream delay [ms] at top level = \t\t%.5f\n',   mean(bits{1,end})./(CONFIG.to_sink_data_rate*1024)*1000)
+  fprintf('Average upstream delay [ms] at top level = \t%.5f\n',   mean(bits{1,end})./(CONFIG.to_sink_data_rate*1024)*1000)
   fprintf('Average downstream delay [ms] at top level = \t%.5f\n', mean(bits{2,end})./(CONFIG.to_sink_data_rate*1024)*1000)
 
-fprintf('Number of not attended:\n\t\tUP\t\t\tDOWN\n')
-disp([sum(delays>maxDelays)])
-
-for i_tech = 1:size(technology,2)
-  fprintf('technology: %s\n', technology{i_tech}.name)
-end
-
+fprintf('Number of not attended:\n')
+not_att_sum = sum(delays>maxDelays);
+fprintf('UP:\t%d\nDOWN:\t%d\n',not_att_sum(1),not_att_sum(2))
 fprintf('=====================================================\n\n')
 
 % Plot the scenario again, with cluster heads. Now, distinguishing clients

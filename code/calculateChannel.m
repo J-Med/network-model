@@ -18,7 +18,8 @@ intercellInterference = 0;
 %frequency = 3.5e9;
 d0=100;
 s = 9; % 8.2 to 10.6 dB ==> Trees
-v=3e8; %velocidade da luz (m/s) no vacuo
+v=299792458; % [m/s] speed of light in vacuum
+v=299700000; % [m/s] speed of light in air
 lambda = v / frequency;
 hr = 2;
 a=3.6;
@@ -37,7 +38,7 @@ L_db = 92.4 + 20 * log10(distance/1000) + 20 * log10(frequency/1e9) + L_Foliage;
 % the models are expressed in:
 % Xf=6*log10((frequency/1e6)/2000); % frequency conversion from Hz to MHz
 % Xh=-10.8*log10(hr/2000); %for terrain type A and B
-% Xh=-20.0log10 (hr /2000) for terrain type C
+% Xh=-20.0*log10(hr/2000); %for terrain type C
 % Where, f is the operating frequency in MHz, and hr
 % is the receiver antenna height in meter.
 
@@ -51,41 +52,34 @@ L_db = 92.4 + 20 * log10(distance/1000) + 20 * log10(frequency/1e9) + L_Foliage;
 %Potencia em Dbm, perda em db e o resto transforma pra W
 pr_W = 10^((antenna.radiated_power - L_db)/10)/1000;
 %L_Foliage = 0;
-
+intercellInterferences = [];
 for i=1:length(micro) % calculate intercell interference
-  distanceA = pdist([micro(i).xy; user.xy]);
   if(micro(i).deployed && micro(i).id ~= antenna.id)
     distanceA = pdist([micro(i).xy; user.xy]);
     if distanceA == 0
       error('distanceA = %f', distanceA)
     end
-    % distanceA = (((micro(i).x - user.ux)^2) + ((micro(i).y - user.uy)^2))^0.5;
     L_dbA = micro(i).radiated_power - (92.4 + 20 * log10(distanceA/1000) + 20*log10(frequency/1e9)+ L_Foliage);
     % L_dbA = micro(i).radiated_power - (A + 10*Y*log10(distanceA/d0)+s - equalizador);
-    intercellInterference = intercellInterference + (10^(L_dbA/10))/1000;
+%     if (10^(L_dbA/10))/1000 > 1e-8
+%       fprintf('interf from %d to %d: ',micro(i).id, antenna.id)
+%       (10^(L_dbA/10))/1000
+%     end
+    intercellInterference = intercellInterference + (10^(L_dbA/10))/1000; % transformation from dbA to mw
   end
   intercellInterferences(i) = intercellInterference;
-
+  
 end
-%intercellInterference = 0;
+
 %sum_pot_interf = -30;
 %if intercellInterference < sum_pot_interf
-SINR = (pr_W / (white_noise + intercellInterference));
+  SINR = (pr_W / (white_noise + intercellInterference));
 %else
-%    SINR = (pr_W / (white_noise + sum_pot_interf));
+% SINR = (pr_W / (white_noise + sum_pot_interf));
 %end
 
 
 %STANFORD: 600m ==> vazao de 5kbps || 140m ==> vazao de 976kbps
 dataRate = (antenna.band * log2(1+SINR))/1024;
-CQI = round(1 + ((7/13)*(SINR+6)));
-
-%  else %apagar
-%
-%  SINR = 0;         %apagar
-%  dataRate = 0;     %apagar
-%  CQI = 0;          %apagar
-%
-%  end %apagar
-
+%CQI = round(1 + ((7/13)*(SINR+6)));
 end

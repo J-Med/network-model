@@ -130,26 +130,28 @@ for i = 1:n_micros
   micros(i).deployed = deployed_micros(i);
   micros(i).radiated_power = micro_radiated_power;
 end
-
-
 n_micros_added = n_micros;
+
+
 interference_from_other_lvls = 1;
 if interference_from_other_lvls
   for c_lvl = 1:size(clustering,2)-1
-    if c_lvl==clustering_level && up1_down2 == 2 % do not add the same micros from the same level
+    if c_lvl==clustering_level && up1_down2 == 2 % do not add micros from the same level that was already added (one hop above)
       continue
     end
-    if c_lvl==size(clustering,2)-1 && up1_down2 == 1 % last level and upstream (nowhere to send data in this model)
-      continue
-    end
-    if c_lvl == 1 && up1_down2 == 1 %equal to c_lvl-1+up1_down2 == 1 % skip interference caused by all the end sers (at the lowest level)
+%     if c_lvl==size(clustering,2) && up1_down2 == 1 % last level and upstream (nowhere to send data in this model)
+%       continue THIS NEVER HAPPENS, WE TEST C_LVL UP TO 2ND TO LAST
+%       ELEMENT
+%     end
+    if c_lvl == 1 && up1_down2 == 1 %equal to c_lvl-1+up1_down2 == 1 % skip interference caused by all the end users (at the lowest level)
       continue
     end
     if ANTENNAS.technology{clustering_level}.frequency ~= ANTENNAS.technology{c_lvl}.frequency
       continue % no interference if the frequency is different
     end
 
-    micros_at_lvl = clustering{c_lvl-1+up1_down2}.CH_coords(:,1:2);
+    lvl_that_sends = c_lvl-1+up1_down2; % 1 for users, 2 for micros, 3 for macros
+    coords_nodes_that_send = clustering{lvl_that_sends}.CH_coords(:,1:2);
     for i = 1:size(micros_at_lvl,1)
       micros(i+n_micros_added).id = i+n_micros_added;
       micros(i+n_micros_added).xy = micros_at_lvl(i,:);

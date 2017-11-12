@@ -1,4 +1,4 @@
-function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
+function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, ANTENNAS, show)
 % Performs multi-level clustering using a technique given by parameter
 %
 % INPUTS
@@ -25,7 +25,7 @@ function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
   %size(k_lvls)
   x_temp = x;
   %size(x)
-  clustering{1}.CH_coords = x; % in the base level, cluster head 
+  clustering{1}.node_coords = x; % in the base level, cluster head 
     % cooordinates are our input data. It will be used for next clustering
   clustering{1}.next_k = k_lvls{1};
   clustering{1}.idx = [1];
@@ -48,7 +48,7 @@ function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
             return
           end
           %k = k{1};
-          x_temp = original.CH_coords;
+          x_temp = original.node_coords;
           cluster_head_coords = [];
           memberships = [];
           
@@ -63,7 +63,6 @@ function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
             addpath('k_means');
             options.kernel = 'rbf';
             options.sigma = 1.0;
-            [c_m, means_m, x_dists_m] = main_k_means(getKernel(x_temp',x_temp',options),k,false, trials2run, Inf);
             [c_m, means_m, x_dists_m] = main_k_means(getKernel(x_temp',x_temp',options),k,false, trials2run, Inf);
             cluster_head_coords = means_m';
             memberships = c_m';
@@ -87,8 +86,9 @@ function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
 %           clustering{idx_linear{:}}.idx = idx;
 %           clustering{idx_linear{:}}.k = [original.k, k];
           
-          clustering{i_clust}.CH_coords = cluster_head_coords;
+          clustering{i_clust}.node_coords = cluster_head_coords;
           clustering{i_clust}.memberships = memberships;
+          clustering{i_clust}.down_bands  = get_frequency_bands_down(cluster_head_coords, k, i_clust-1, ANTENNAS);
           if lvl < levels   clustering{i_clust}.next_k = k_lvls{lvl+1}; end
           clustering{i_clust}.idx = idx;
           clustering{i_clust}.k_history = [original.k_history, k];
@@ -102,9 +102,9 @@ function clustering = my_cluster(technique, levels, k_lvls, x, trials2run, show)
   if show
     figure('Name','Scenario and cluster heads');
     hold on;
-    plot(clustering{1}.CH_coords(:,1), clustering{1}.CH_coords(:,2), 'bx', 'linewidth', 1, 'markersize', 5);
-    plot(clustering{2}.CH_coords(:,1), clustering{2}.CH_coords(:,2), 'k+', 'linewidth', 2, 'markersize', 10);
-    plot(clustering{3}.CH_coords(:,1), clustering{3}.CH_coords(:,2), 'r^', 'linewidth', 2, 'markersize', 12);
+    plot(clustering{1}.node_coords(:,1), clustering{1}.node_coords(:,2), 'bx', 'linewidth', 1, 'markersize', 5);
+    plot(clustering{2}.node_coords(:,1), clustering{2}.node_coords(:,2), 'k+', 'linewidth', 2, 'markersize', 10);
+    plot(clustering{3}.node_coords(:,1), clustering{3}.node_coords(:,2), 'r^', 'linewidth', 2, 'markersize', 12);
     hold off;
   end
 end

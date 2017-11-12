@@ -28,13 +28,14 @@ for i_cluster_config = 1:size(cluster_config,1)
   k_set{2} = cluster_config(i_cluster_config,2);
   
 for technique = clustTechniques  
-  clustering = my_cluster(technique, clustering_levels, k_set, coords, trials2run, CONFIG.show);
+  clustering = my_cluster(technique, clustering_levels, k_set, coords, trials2run, ANTENNAS, CONFIG.show);
     
   for up1_down2 = 1:2
     
     Adjacency_mat{clustering_levels} = [];
     for lvl = 1:clustering_levels
-      Adjacency_mat{lvl+1} = get_adjacency(clustering{lvl}.CH_coords(:,1:2), clustering, ANTENNAS, CONFIG, lvl, up1_down2);
+      Adjacency_mat{lvl+1} = get_adjacency(clustering{lvl}.node_coords(:,1:2), clustering, ANTENNAS, CONFIG, lvl, up1_down2);
+      Adjacency_mat{lvl+1} = Adjacency_mat{lvl+1} * CONFIG.TDD_rate(up1_down2);
     end
     
     %size of clustering struct needs to be the product of sizes of k_lvls kindof- for 2 and 1 it is 5, not 4
@@ -102,6 +103,6 @@ for technique = clustTechniques
   end
   end
 
-  analyze_results(technique, ANTENNAS.technology, maxDelays, total_delays_up1_down2, bits, Adjacency_mat_up, Adjacency_mat_down, clustering, CONFIG);
+  analyze_results(technique, ANTENNAS.hop, maxDelays, total_delays_up1_down2, bits, Adjacency_mat_up, Adjacency_mat_down, clustering, CONFIG);
 end
 end

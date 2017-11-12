@@ -1,10 +1,12 @@
-function [dataRate, CQI, SINR, intercellInterferences] = calculateChannel(user, antenna, frequency, micro)
+
+function [dataRate, CQI, SINR, intercellInterferences] = calculateChannel(sender, receiver, frequency, micro)
 % OUTPUT
 % dataRate .. [kbps]
+% SINR_received
 
 
 %Distancia de Euclides
-distance = pdist([user.xy; antenna.xy]);
+distance = pdist([receiver.xy; sender.xy]);
 
 %distance = (((user.ux - antenna.x)^2) + ((user.uy-antenna.y)^2))^0.5;
 %distance = 6000;
@@ -50,22 +52,28 @@ L_db = 92.4 + 20 * log10(distance/1000) + 20 * log10(frequency/1e9) + L_Foliage;
 % L_db = A + 10*Y*log10(distance/d0)+s - equalizador;
 
 %Potencia em Dbm, perda em db e o resto transforma pra W
-pr_W = 10^((antenna.radiated_power - L_db)/10)/1000;
+pr_W = 10^((sender.radiated_power+sender.gain - L_db)/10)/1000;
+pr_W = 10^((sender.radiated_power+sender.gain+receiver.gain - L_db)/10)/1000;
 %L_Foliage = 0;
 intercellInterferences = [];
 for i=1:length(micro) % calculate intercell interference
-  if(micro(i).deployed && micro(i).id ~= antenna.id)
-    distanceA = pdist([micro(i).xy; user.xy]);
-    if distanceA == 0
-      error('distanceA = %f', distanceA)
-    end
-    L_dbA = micro(i).radiated_power - (92.4 + 20 * log10(distanceA/1000) + 20*log10(frequency/1e9)+ L_Foliage);
-    % L_dbA = micro(i).radiated_power - (A + 10*Y*log10(distanceA/d0)+s - equalizador);
-%     if (10^(L_dbA/10))/1000 > 1e-8
-%       fprintf('interf from %d to %d: ',micro(i).id, antenna.id)
-%       (10^(L_dbA/10))/1000
-%     end
-    intercellInterference = intercellInterference + (10^(L_dbA/10))/1000; % transformation from dbA to mw
+  if micro(i).deployed && ~isequal(micro(i).xy,sender.xy) && ~isequal(micro(i).xy,receiver.xy)  % && micro(i).id ~= sender.id)
+    distanceA = pdist([micro(i).xy; receiver.xy]);
+   % if pdist() > 0
+      if distanceA == 0
+        error('distanceA = %f', distanceA)
+      end
+      if pdist([micro(i).xy; sender.xy]) == 0
+        error('distanceB = %f', 0)
+      end
+      L_dbA = micro(i).radiated_power - (92.4 + 20 * log10(distanceA/1000) + 20*log10(frequency/1e9)+ L_Foliage);
+      % L_dbA = micro(i).radiated_power - (A + 10*Y*log10(distanceA/d0)+s - equalizador);
+  %     if (10^(L_dbA/10))/1000 > 1e-8
+  %       fprintf('interf from %d to %d: ',micro(i).id, antenna.id)
+  %       (10^(L_dbA/10))/1000
+  %     end
+      intercellInterference = intercellInterference + (10^(L_dbA/10))/1000; % transformation from dbA to W
+    %end
   end
   intercellInterferences(i) = intercellInterference;
   
@@ -73,13 +81,13 @@ end
 
 %sum_pot_interf = -30;
 %if intercellInterference < sum_pot_interf
-  SINR = (pr_W / (white_noise + intercellInterference));
+  SINR = (pr_W / (white_noise + intercellInterference)); % (W / (W+W))
 %else
 % SINR = (pr_W / (white_noise + sum_pot_interf));
 %end
 
 
 %STANFORD: 600m ==> vazao de 5kbps || 140m ==> vazao de 976kbps
-dataRate = (antenna.band * log2(1+SINR))/1024;
-%CQI = round(1 + ((7/13)*(SINR+6)));
+dataRate = (sender.bandwidth * log2(1+SINR))/1024;
+CQI = round(1 + ((7/13)*(SINR+6)));
 end

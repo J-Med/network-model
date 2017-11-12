@@ -36,11 +36,24 @@ data__maxDelays = [
         1344           0         100         Inf];
 
 if scenarioSize ~= 13
+%   clientTypes = [
+%          321         448           1          50
+%         1344           0         100         Inf
+%         1665         448           1          50];
   clientTypes = [
          321         448           1          50
+        1665         448           1          50
+         321         448           1          50
+        1665         448           1          50
         1344           0         100         Inf
-        1665         448           1          50];
-        
+         321         448           1          50
+         321         448           1          50
+        1344           0         100         Inf
+        1665         448           1          50
+        1344           0         100         Inf
+         321         448           1          50
+        1344           0         100         Inf];
+
   %% define names, connections with distances, and calculate
   % idx = randi(size(data__max_delays,1)-1,num,1)+1;
   % data =       data__max_delays(idx,1:2);

@@ -1,10 +1,10 @@
-function analyze_results(technique, technology, maxDelays, delays, bits, Adjacency_mat_up, Adjacency_mat_down, clustering, CONFIG)
+function analyze_results(technique, hop, maxDelays, delays, bits, Adjacency_mat_up, Adjacency_mat_down, clustering, CONFIG)
 % Shows results on cmd line. In future will do some analysis.
 
 fprintf('%d nodes\n', size(maxDelays,1));
 fprintf('clustering technique: %s\n',technique{:})
-for i_tech = 1:size(technology,2)
-  fprintf('technology %d: %s\n', i_tech, technology{i_tech}.name)
+for i_hop = 1:size(hop,2)
+  fprintf('technology %d: %s\n', i_hop, hop{i_hop}.technology_name)
 end
 
 %[bits_in(:,1) delays(:,1) maxDelays(:,1) delays(:,1)>maxDelays(:,1)]

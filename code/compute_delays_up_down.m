@@ -141,7 +141,7 @@ while nnz(Adj) > 0
 			tot_rcvd(rcvr) = tot_rcvd(rcvr)+ data_sent_tmp;
 			% increment delay on this data
 			data_delay(sender) = data_delay(sender) + data_sent_tmp/Adj(sender,rcvr);
-        end
+    end
 		% zero out the connection (because it was used)
 		Adj(sender,:) = 0;
 	end

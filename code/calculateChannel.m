@@ -1,5 +1,4 @@
-
-function [dataRate, CQI, SINR, intercellInterferences] = calculateChannel(sender, receiver, frequency, micro)
+function [dataRate, CQI, SINR, intercellInterferences] = calculateChannel(sender, receiver, frequency, micro, n_receivers)
 % OUTPUT
 % dataRate .. [kbps]
 % SINR_received

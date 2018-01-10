@@ -1,3 +1,9 @@
+% function [tstPaths, clustTechniques, levels, k_set] = configuration()
+tests = [4];
+tstPaths = '';
+for test = tests
+  tstPaths(end+1,:) = ['tst' filesep num2str(test,'%02d') '.in'];
+end
 clustTechniques = {'k-means'};%,'kernel_k-means'};%,'k-medoids','hierarch'};
 trials2run = 10;
 % levels = 2; % Value 1 means doing one clustering. Value 2 means doing
@@ -9,23 +15,42 @@ if clustering_levels~=2
   disp('levels - this number should be always fixed at 2 for this research')
   level
 end
-
+%k_set{1} = {10};
+%k_set{2} = {3};
+%   k_set{1} = {10:10:200};
+%   k_set{2} = {5:5:40};
+%   k_set{3} = {1:1:5};
 CONFIG.show = false;
 
+%   clustTechniques = {'k-means'};
+%   k_set{1} = {100};
+%   k_set{2} = {15};
+%   %k_set{3} = {4};
+cluster_config = [100 1; 100 2; 200 1; 200 2; 300 1; 300 2; 400 1; 400 2; 500 1];
+cluster_config = [40 2; 50 2; 80 2; 100 2; 100 3];
+cluster_config = [50 3; 50 4];
+
+scenario_size = '';
+% [scenario_size, technology] = get_test(tstPaths(1,:));
+if strcmp(scenario_size,'')
+  scenario_size = '2469';%'2469'; % 13, 4, 906, 2469
+  ANTENNAS.hop{1}.technology_name = 'wimax';
+  ANTENNAS.hop{2}.technology_name = 'wimax';
+end
 n_assignments2run = 2;
 for i_tmp = 1:n_assignments2run
   [coords, maxDelays{i_tmp}, bits_in{i_tmp}] = get_input(scenario_size);
 end
-CONFIG.to_sink_data_rate = 10*1024^2; % [kbps] tens of Gbps ethernet
-CONFIG.DIRECT_LINK_DATA_RATE_ON_SITE = 10*1024^2; % [kbps] -> 10Gbps
+CONFIG.to_sink_data_rate = 20*1024^2; % [kbps] tens of Gbps ethernet
+CONFIG.DIRECT_LINK_DATA_RATE_ON_SITE = 40*1024^2; % [kbps] -> 10Gbps
 CONFIG.not_consider_i_interf_levels = 1; % do not consider interference from lvl 1 (client antennas)
 % equipment in levels: cpe, small cell, macro cell
-% CONFIG.TDD_rate = [11/15, 4/15]; % [upstream, downstream] - percentage during which transfer will occur. Should sum to one
+CONFIG.TDD_rate = [9/15, 4/15]; % [upstream, downstream] - percentage during which transfer will occur. Should sum to one
 %CONFIG.TDD_rate = [1, 1]; % [upstream, downstream] - percentage during which transfer will occur. Should sum to one
 
 % set configuration of antennas
 if strcmp(ANTENNAS.hop{1}.technology_name,'wifi')
-  ANTENNAS.hop{1}.frequency = 2.4e9;%5.8e9; % 5.4 or 5.8   % [Hz][MHz] -> 2.4e3 = 2.4GHz % TODO 4
+  ANTENNAS.hop{1}.frequency = 5.8e9; % 5.4 or 5.8   % [Hz][MHz] -> 2.4e3 = 2.4GHz % TODO 4
   ANTENNAS.hop{1}.radiated_power.equipment{1} = 20; % [dBm]
   ANTENNAS.hop{1}.gain.equipment{1}           =  0; % [dBm]
   ANTENNAS.hop{1}.radiated_power.equipment{2} = 40; % [dBm] ERP 30 - 40

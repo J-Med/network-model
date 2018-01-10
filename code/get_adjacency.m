@@ -41,10 +41,10 @@ function data_rates = get_adjacency(positions, clustering, ANTENNAS, CONFIG, clu
 %
 % micro vector
 % micro(i).deployed, id, radiated_power
-% antenna.id, band
+% antenna_bigger.id, band
 
 micros_positions = clustering{clustering_level+1}.node_coords(:,1:2);
-cluster_idx = clustering{clustering_level+1}.memberships;
+cluster_indices = clustering{clustering_level+1}.memberships;
 k = clustering{clustering_level+1}.k_history(end); % take the last k from the list - clustering.k stores all ks in the hierarchy of clustering levels
 n_data = size(positions,1);
 n_micros = size(micros_positions,1);
@@ -70,7 +70,7 @@ end
 
 % Rememinder: level is (n+1). That is: 1 for no clustering, 2 for
 % one clustering, etc.
-i_hop = clustering_level; % 1 for 1st level (user/IED <-> small cell), 2 for 2nd level (small cell <-> macro) etc.
+i_hop = clustering_level; % 1 for 1st level (user/antenna_smaller/IED <-> small cell), 2 for 2nd level (small cell <-> macro) etc.
 freq = ANTENNAS.hop{clustering_level}.frequency; % [Hz]
 sender.radiated_power = ANTENNAS.hop{clustering_level}.radiated_power.equipment{i_hop}; % [dBm]
 sender.gain   = ANTENNAS.hop{clustering_level}.gain.equipment{i_hop}; % [dBm]
@@ -82,7 +82,7 @@ all_micros_disabled_for_interference = 0;
 
 data_rates = zeros(n_data,k);
 multipath = false;
-if size(cluster_idx,2)>1; multipath = true; end
+if size(cluster_indices,2)>1; multipath = true; end
 for i = 1:n_data
   band_idx = clustering{i_hop+1}.memberships(i);
 
@@ -92,35 +92,35 @@ for i = 1:n_data
 %     band_idx = i;
 %   end
   i_band = clustering{i_hop+1}.down_bands(band_idx);
-  interferers = get_interferers(sender, receiver, freq, clustering_level, clustering, up1_down2, ANTENNAS, i_hop, i_band);
+  interferers = get_interferers(sender, receiver, freq, clustering_level, clustering, up1_down2, ANTENNAS, i_hop, i_band, CONFIG.TDD_rates, cluster_indices(i));
   n_interferers_added = size(interferers,1);
  % fprintf('%d of %d: ', i, n_data)
   %every time make sure all is undeployed = ready & clean to use
 %   cells0 = num2cell(zeros(size(interferers,2),1));
 %   cells1 = num2cell(ones(size(interferers,2),1));
 %   if size(interferers,1) ~= 0
-%     [interferers.deployed] = cells0{:}; % this assignment functinality is called disperse function
+%     [interferers.deployed] = cells0{:}; % this assignment functionality is called disperse function
 %   end
   if ~multipath
-    user.xy = positions(i,:);
+    antenna_smaller.xy = positions(i,:);
     %user_micro = 0;
-%     current_cluster_members_idx = clustering{clustering_level+1}.memberships == cluster_idx(i); % TODO this is weird - memberships should be together with original locations. Or not?
+%     current_cluster_members_idx = clustering{clustering_level+1}.memberships == cluster_indices(i); % TODO this is weird - memberships should be together with original locations. Or not?
 %     if ~all_micros_disabled_for_interference
 %       [interferers(current_cluster_members_idx).deployed] = cells1{1:sum(current_cluster_members_idx)};
 %     else
 %       current_cluster_members_idx = [];
 %     end
-    antenna.xy = micros_positions(cluster_idx(i),:);
-    antenna.id = n_interferers_added+1;
-    user.id    = n_interferers_added+2;
+    antenna_bigger.xy = micros_positions(cluster_indices(i),:);
+    antenna_bigger.id = n_interferers_added+1;
+    antenna_smaller.id = n_interferers_added+2;
 
-    for i_micro = 1:size(interferers,2)
-      if interferers(i_micro).xy == user.xy
-        interferers(i_micro).deployed = 0; % we do not want interference to be caused by our user
-        user.id = i_micro;
+    for i_micro = 1:numel(interferers)
+      if interferers(i_micro).xy == antenna_smaller.xy
+        interferers(i_micro).deployed = 0; % we do not want interference to be caused by our antenna_smaller
+        antenna_smaller.id = i_micro;
       end
-      if interferers(i_micro).xy == antenna.xy
-        antenna.id = i_micro;
+      if interferers(i_micro).xy == antenna_bigger.xy
+        antenna_bigger.id = i_micro;
       end
     end
 
@@ -132,38 +132,40 @@ for i = 1:n_data
 %       micros(user_micro).deployed = 0; % actually we won't use it since
 %       we keep all micros' deployed at 0 and only turn on some.
 %     end
-    if antenna.id == 0
-      error('antenna.id is %d',antenna.id)
+    if antenna_bigger.id == 0
+      error('antenna_bigger.id is %d',antenna_bigger.id)
     end
-    if user.id == 0
-      error('user.id is %d',user.id)
+    if antenna_smaller.id == 0
+      error('antenna_smaller.id is %d',antenna_smaller.id)
     end
     
-%     if cluster_idx(i) == 12
+%     if cluster_indices(i) == 12
 %       fprintf('12\n')
 %     end
-    j = cluster_idx(i);
-    if up1_down2 == 1      % user    is sender, antenna is receiver
-      receiver.xy = antenna.xy;
-      receiver.id = antenna.id;
-      sender.xy   = user.xy;
-      sender.id   = user.id;
-    elseif up1_down2 == 2  % antenna is sender, user    is receiver
-      sender.xy   = antenna.xy;
-      sender.id   = antenna.id;
-      receiver.xy = user.xy;
-      receiver.id = user.id;
+    j = cluster_indices(i);
+	n_receivers = 1;
+    if up1_down2 == 1      % antenna_smaller    is sender, antenna_bigger is receiver
+      receiver.xy = antenna_bigger.xy;
+      receiver.id = antenna_bigger.id;
+      sender.xy   = antenna_smaller.xy;
+      sender.id   = antenna_smaller.id;
+    elseif up1_down2 == 2  % antenna_bigger is sender, antenna_smaller    is receiver
+      sender.xy   = antenna_bigger.xy;
+      sender.id   = antenna_bigger.id;
+      receiver.xy = antenna_smaller.xy;
+      receiver.id = antenna_smaller.id;
+	  n_receivers = sum(cluster_indices(cluster_indices == i));
     end
     
-    [data_rates(i,j),~,~,inter] = calculateChannel(sender,receiver,freq,interferers);
+    [data_rates(i,j),~,~,inter] = calculateChannel(sender,receiver,freq,interferers,n_receivers);
     %interf(i,:) = inter; different size every time
-    %         disp([user.xy antenna.xy])
+    %         disp([antenna_smaller.xy antenna_bigger.xy])
     %         disp([i j data_rates(i,j)])
     %     if isnan(data_rates(i,j))
     %         [i j]
     % %         pause
-    %         antenna.xy = antenna.xy + [1e-10 0];
-    %         calculateChannel(user,antenna,freq,micros)
+    %         antenna_bigger.xy = antenna_bigger.xy + [1e-10 0];
+    %         calculateChannel(antenna_smaller,antenna_bigger,freq,micros)
     %     end
   else
     error('not implemented and tested branch. Refer to previous versions (june2017) for ideas')

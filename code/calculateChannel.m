@@ -1,92 +1,64 @@
-function [dataRate, CQI, SINR, intercellInterferences] = calculateChannel(sender, receiver, frequency, micro, n_receivers)
-% OUTPUT
-% dataRate .. [kbps]
-% SINR_received
+function [dataRate, CQI, SINR, intercellInterferences_] = calculateChannel(sender, receiver, frequency_Hz, interferers, nReceivers)
 
-
-%Distancia de Euclides
-distance = pdist([receiver.xy; sender.xy]);
-
-%distance = (((user.ux - antenna.x)^2) + ((user.uy-antenna.y)^2))^0.5;
-%distance = 6000;
-%if (distance < 1000) %apagar
-
-R = 3; %R é a altura da folhagem em metros;
-white_noise = 7.4e-13;
-intercellInterference = 0;
-
-%STANFORD
-%frequency = 3.5e9;
-d0=100;
-s = 9; % 8.2 to 10.6 dB ==> Trees
-v=299792458; % [m/s] speed of light in vacuum
-v=299700000; % [m/s] speed of light in air
-lambda = v / frequency;
-hr = 2;
-a=3.6;
-b=0.005;
-c=20;
-equalizador = 16;
-hb = 70; %base station antenna height in meters  This is between 10 m and 80 m.
-
-% so arvores
-L_Foliage = 0.2*((frequency/1e6)^0.3)*((R)^0.6); %Perda por causa da folhagem; % frequency conversion from Hz to MHz
-%####Ao = 92.4+20log10(d[km]) +20log10(f[GHz])
-L_db = 92.4 + 20 * log10(distance/1000) + 20 * log10(frequency/1e9) + L_Foliage; % frequency conversion from Hz to GHz
-
-%#####STANFORD - no medio da cidade
-% The frequency correction factor Xf and the correction for receiver antenna height Xh for
-% the models are expressed in:
-% Xf=6*log10((frequency/1e6)/2000); % frequency conversion from Hz to MHz
-% Xh=-10.8*log10(hr/2000); %for terrain type A and B
-% Xh=-20.0*log10(hr/2000); %for terrain type C
-% Where, f is the operating frequency in MHz, and hr
-% is the receiver antenna height in meter.
-
-%%SUI - com predios
-% A=20*log10(4*pi*d0/lambda);
-%
-% Y=(a-(b*hb))+(c/hb);
-%
-% L_db = A + 10*Y*log10(distance/d0)+s - equalizador;
+distance_m = pdist([receiver.xy; sender.xy]); % Euclidean distance
 
 %Potencia em Dbm, perda em db e o resto transforma pra W
-pr_W = 10^((sender.radiated_power+sender.gain - L_db)/10)/1000;
-pr_W = 10^((sender.radiated_power+sender.gain+receiver.gain - L_db)/10)/1000;
-%L_Foliage = 0;
-intercellInterferences = [];
-for i=1:length(micro) % calculate intercell interference
-  if micro(i).deployed && ~isequal(micro(i).xy,sender.xy) && ~isequal(micro(i).xy,receiver.xy)  % && micro(i).id ~= sender.id)
-    distanceA = pdist([micro(i).xy; receiver.xy]);
-   % if pdist() > 0
-      if distanceA == 0
-        error('distanceA = %f', distanceA)
-      end
-      if pdist([micro(i).xy; sender.xy]) == 0
-        error('distanceB = %f', 0)
-      end
-      L_dbA = micro(i).radiated_power - (92.4 + 20 * log10(distanceA/1000) + 20*log10(frequency/1e9)+ L_Foliage);
-      % L_dbA = micro(i).radiated_power - (A + 10*Y*log10(distanceA/d0)+s - equalizador);
-  %     if (10^(L_dbA/10))/1000 > 1e-8
-  %       fprintf('interf from %d to %d: ',micro(i).id, antenna.id)
-  %       (10^(L_dbA/10))/1000
-  %     end
-      intercellInterference = intercellInterference + (10^(L_dbA/10))/1000; % transformation from dbA to W
-    %end
+power_dBm = (sender.radiatedPower) - nReceivers + sender.gain + receiver.gain - getLoss_dB(distance_m, frequency_Hz);
+power_W = dBm2W(power_dBm);
+
+intercellInterferences_ = [];
+intercellInterference_ = 0;
+for i=1:length(interferers) % calculate intercell interference
+  if interferers(i).deployed && ~isequal(interferers(i).xy,sender.xy) && ~isequal(interferers(i).xy,receiver.xy)  % && interferers(i).id ~= sender.id)
+    distanceA = pdist([interferers(i).xy; receiver.xy]);
+    if distanceA == 0
+      error('distanceA = %f', distanceA)
+    end
+    if pdist([interferers(i).xy; sender.xy]) == 0
+      error('distanceB = %f', 0)
+    end
+    L_dbA = interferers(i).radiatedPower - getLoss_dB(distanceA, frequency_Hz);
+  intercellInterference_ = intercellInterference_ + L_dbA;
   end
-  intercellInterferences(i) = intercellInterference;
-  
+  intercellInterferences_(i) = intercellInterference_;
 end
 
-%sum_pot_interf = -30;
-%if intercellInterference < sum_pot_interf
-  SINR = (pr_W / (white_noise + intercellInterference)); % (W / (W+W))
-%else
-% SINR = (pr_W / (white_noise + sum_pot_interf));
-%end
+AGWN_W = dBm2W(randn(1,1)); % additive gaussian white noise
+thermalNoiseArticle_W=7.4e-14;
+temp_Celsius = 20;
+thermalNoise_W = dBm2W(getThermalNoise_dBm(sender.bandwidth, temp_Celsius));
+noise_W = thermalNoise_W;
 
-
-%STANFORD: 600m ==> vazao de 5kbps || 140m ==> vazao de 976kbps
+SINR = (power_W / (noise_W + dBm2W(intercellInterference_))); % (W / (W+W))
 dataRate = (sender.bandwidth * log2(1+SINR))/1024;
 CQI = round(1 + ((7/13)*(SINR+6)));
+
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function loss_dB = getLoss_dB(distance_m, frequency_Hz)
+  R_m = 3;  %R ï¿½ a profundidade da folhagem em metros;
+  freeSpaceLoss_dB = 92.4 + 20 * log10(distance_m/1000) + 20 * log10(frequency_Hz/1e9); % distance meters to km, frequency from Hz to GHz
+  lossFoliage_dB = 0.2*((frequency_Hz/1e6)^0.3)*((R_m)^0.6); %Perda por causa da folhagem; % frequency conversion from Hz to MHz
+  airAttenuation_dB = 0.01 * distance_m/1000;
+  rainAttenuation_dB = 0.1 * distance_m/1000;
+  
+  loss_dB = freeSpaceLoss_dB + lossFoliage_dB + airAttenuation_dB + rainAttenuation_dB;
+end
+
+function temp_Kelvin = celsius2kelvin(temp_Celsius)
+  Celsius0_Kelvin = 273.15;
+  temp_Kelvin = Celsius0_Kelvin+temp_Celsius;
+end
+
+function thermalNoise_dBm = getThermalNoise_dBm(bandwidth_Hz, temp_Celsius)
+  bolzmanConst_JPerK = 1.38064852e-23;
+  temp_Kelvin = celsius2kelvin(temp_Celsius);
+  thermalNoise_dBm = 10*log10(bolzmanConst_JPerK*temp_Kelvin*1000) + 10*log10(bandwidth_Hz);
+end
+
+function W = dBm2W(dBm)
+  W = 10^(dBm/10)/1000;
 end

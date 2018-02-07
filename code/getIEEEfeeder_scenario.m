@@ -18,7 +18,6 @@ function [positions, sink_idx, data, max_delays, node_names] = getIEEEfeeder_sce
 
 num = scenario_size;
 data__max_delays = [
-           0           0         Inf         Inf
          321         448           1          50
         1665         448           1          50
          321         448           1          50
@@ -56,7 +55,7 @@ offset = sink_xy;
 
 %% define names, connections with distances, and calculate
 node_names = {
-    '650'
+%     '650'
     '632'
     '645'
     '633'
@@ -104,7 +103,7 @@ max_delays = data__max_delays(:,3:4);
 sink_idx = 1;
 
 distances = {
-    {609.6};                %650
+%     {609.6};                %650
     {152.4,152.4,609.6};    %632
     {91.44};                %645
     {0};                    %633
@@ -126,7 +125,7 @@ east  = [1, 0];
 zero  = [0 ,0];
 
 directions = {
-    {south};                %650
+%     {south};                %650
     {west;east;south};      %632
     {west};                 %645
     {east};                 %633

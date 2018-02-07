@@ -1,16 +1,25 @@
-%% TODOs
-% indexing, i.e. {lvl}, {lvl-1}
-% better result analysis
-
-%% INFO
+%% Preparation
 % x - data points - a list of 2D coordinates
 % xCount - number of data points, such as 2649 or 12
 clearvars
 clear
 rng(0);
 iRun = 1;
-%for iConfig = 1:8
-for iConfig = 13:13
+nowStr = datestr(now,'yyyy-mm-dd_HH-MM-SS');
+mkdir clustered
+mkdir results
+mkdir('results', nowStr);
+addpath(['xlwrite']);
+resultsPath = ['results' filesep nowStr filesep];
+summaryName = ['summary_' nowStr '.xls'];
+xlwrite([resultsPath summaryName], ...
+  {'id', 'link', 'Normal N not attended', 'Restricted N not attended', 'Total subscribers', 'small cells', 'macro cells', ...
+  'clustering', 'technology hop1', 'technology hop2', ...
+  'TDD rates up', 'TDD rates down', 'TDD effective rates up', 'TDD effective rates down'}, ...
+  1, sprintf('A%i',1));
+
+%% Run
+for iConfig = 1:20
 fileName = sprintf('netConfig%02d.m', iConfig);
 run(['networkConfigs' filesep fileName])
 run configuration
@@ -22,7 +31,10 @@ run configuration
 
 divide_per_bit = 1; %!!!!!!! this parameter needs to be changed in calc_delays_plot_topology, not here. It's here just as a reference
 nItems = size(coords,1);
-
+if strcmp(scenarioSize,'13')
+  scenarioSize = '12';
+end
+mkdir('clustered', scenarioSize)
 %% Start clustering
 for iClusterConfig = 1:size(clusterConfig,1)
   kSet{1} = clusterConfig(iClusterConfig,1);
@@ -110,8 +122,8 @@ for iClusterConfig = 1:size(clusterConfig,1)
         fprintf('Run # %i\n', iRun);
         fprintf('k1: %i\n', kSet{1}(1))
         fprintf('k2: %i\n', kSet{2}(1))
-        analyzeResults(technique, ANTENNAS.hop, maxDelays{iAssignment}, totalDelays_ms, bits, AdjacencyMat, clustering, up1Down2, CONFIG, delays_ms);
-      iRun = iRun+1;
+        analyzeAndSaveResults(technique, ANTENNAS.hop, maxDelays{iAssignment}, totalDelays_ms, bits, AdjacencyMat, clustering, up1Down2, CONFIG, iRun, resultsPath, summaryName);
+        iRun = iRun+1;
       end
     end
   end

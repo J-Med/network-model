@@ -1,4 +1,4 @@
-function [coords, maxDelays, bitsIn] = getInput(scenario, restrictedMode)
+function [coords, maxDelays, bitsIn, idx] = getInput(scenario, restrictedMode, idxBase)
   scenarioSize = str2num(scenario);
 % OUTPUTS
 % positions     2D coordinates of clients - size dim*scenarioSize
@@ -20,26 +20,26 @@ function [coords, maxDelays, bitsIn] = getInput(scenario, restrictedMode)
 % sink_xy   ..  coordinates of sink(s) of size k,dim
 
 
-data__maxDelays = [
-           0           0         Inf         Inf
-         321         448           1          50
-        1665         448           1          50
-         321         448           1          50
-        1665         448           1          50
-        1344           0         100         Inf
-         321         448           1          50
-         321         448           1          50
-        1344           0         100         Inf
-        1665         448           1          50
-        1344           0         100         Inf
-         321         448           1          50
-        1344           0         100         Inf];
-
-if scenarioSize ~= 13
-%   clientTypes = [
+% data__maxDelays = [
+% %            0           0         Inf         Inf
+%          321         448           1          50
+%         1665         448           1          50
+%          321         448           1          50
+%         1665         448           1          50
+%         1344           0         100         Inf
+%          321         448           1          50
 %          321         448           1          50
 %         1344           0         100         Inf
-%         1665         448           1          50];
+%         1665         448           1          50
+%         1344           0         100         Inf
+%          321         448           1          50
+%         1344           0         100         Inf];
+% 
+% if scenarioSize ~= 13
+% %   clientTypes = [
+% %          321         448           1          50
+% %         1344           0         100         Inf
+% %         1665         448           1          50];
   clientTypesRegular = [
          321         448           1          50
         1665         448           1          50
@@ -78,11 +78,15 @@ if restrictedMode
 else
     clientTypes = clientTypesRegular;    
 end
-
-  idx = randi(size(clientTypes,1),scenarioSize,1);
-  bitsIn =    clientTypes(idx,1:2);
+  if nargin == 3
+    idx = idxBase;
+  else
+    idx = randi(size(clientTypes,1),scenarioSize,1);
+  end
+bitsIn =    clientTypes(idx,1:2);
   maxDelays = clientTypes(idx,3:4);
 
+if scenarioSize ~= 12
   scenarioPath = ['scenarios' filesep num2str(scenarioSize,'Buscoords%d.csv')];
   coords = csvread(scenarioPath,2,1);
   
@@ -90,13 +94,10 @@ else
   sink_xy = [0,0];
   offset = sink_xy;
 
-  bitsIn =    data__maxDelays(:,1:2);
-  maxDelays = data__maxDelays(:,3:4);
-
   sink_idx = 1;
 
   distances = {
-      {609.6};                %650
+%       {609.6};                %650
       {152.4,152.4,609.6};    %632
       {91.44};                %645
       {0};                    %633
@@ -118,7 +119,7 @@ else
   zero  = [0 ,0];
 
   directions = {
-      {south};                %650
+%       {south};                %650
       {west;east;south};      %632
       {west};                 %645
       {east};                 %633

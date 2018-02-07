@@ -1,3 +1,7 @@
+if strcmp(scenarioSize,'13')
+  scenarioSize = '12';
+end
+
 clustTechniques = {'k-means'};%,'kernel_k-means'};%,'k-medoids','hierarch'};
 trials2run = 10;
 % levels = 2; % Value 1 means doing one clustering. Value 2 means doing
@@ -13,9 +17,11 @@ end
 CONFIG.show = false;
 
 nAssignments2run = 10;
-for iTmp = 1:2:nAssignments2run*2
-  [coords, maxDelays{iTmp}, bitsIn{iTmp}] = getInput(scenarioSize, false);
-  [coords, maxDelays{iTmp+1}, bitsIn{iTmp+1}] = getInput(scenarioSize, true);
+
+nAssignments2run = nAssignments2run*2; %once as normal mode, once as restricted mode
+for iTmp = 1:2:nAssignments2run
+  [coords, maxDelays{iTmp}, bitsIn{iTmp}, idx] = getInput(scenarioSize, false); %normal mode
+  [coords, maxDelays{iTmp+1}, bitsIn{iTmp+1}, ~] = getInput(scenarioSize, true, idx); %restricted mode
 end
 CONFIG.TO_SINK_DATA_RATE = 10*1024^2; % [kbps] tens of Gbps ethernet
 CONFIG.DIRECT_LINK_DATA_RATE_ON_SITE = 10*1024^2; % [kbps] -> 10Gbps

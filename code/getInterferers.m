@@ -8,7 +8,6 @@ nInterferers1Added = 0;
 nInterferers2Added = 0;
 
 clusterIndices = clustering{c_lvl+1}.memberships;
-
 % coordinates of all nodes at the current level (which is the same as
 % 'positions' variable. It is the lower communication level of the two
 % neighbors. That would be either end users or micros.
@@ -78,13 +77,15 @@ for hop = 1:2
     if level==1
       %continue
     end
-    
     if level == iHop
       sameBand.nodesIdx(clusterIndices == iCluster) = false;
     end
+    b = sum(sameBand.nodesIdx);
     [slotNodesActivity, activeSlot] = getActiveSlotGroup(sum(sameBand.nodesIdx), ANTENNAS.hop{hop}.nSlots);
-    sameBand.nodesIdx(~slotNodesActivity) = false;
-
+    allSameBandIndices = find(sameBand.nodesIdx);
+    allActiveSameBandIndices = allSameBandIndices(slotNodesActivity);
+    sameBand.nodesIdx = false(size(sameBand.nodesIdx)); %zero-out the indeces
+    sameBand.nodesIdx(allActiveSameBandIndices) = true;
     sameBand.nNodes = sum(sameBand.nodesIdx); %todo test this
     %sameBand.IDs = clustering{node_lvl}.id(sameBand.nodesIdx);
     sameBand.coords = clustering{level}.nodeCoords(sameBand.nodesIdx,:);
@@ -112,5 +113,6 @@ TDD_downstreamActive = rand(size(interferers_down,2),1) <= TDD_rates(2);
 interferers = [];
 interferers = [interferers,interferers_up(TDD_upstreamActive)];
 interferers = [interferers,interferers_down(TDD_downstreamActive)];
+%fprintf('%i\n',numel(interferers));
 end
 

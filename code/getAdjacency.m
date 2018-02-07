@@ -94,6 +94,7 @@ for i = 1:nData
   iBand = clustering{iHop+1}.downBands(bandIdx);
   interferers = getInterferers(sender, receiver, freq, clusteringLevel, clustering, up1Down2, ANTENNAS, iHop, iBand, CONFIG.TDD_rates, clusterIndices(i));
   nInterferersAdded = size(interferers,1);
+
  % fprintf('%d of %d: ', i, nData)
   %every time make sure all is undeployed = ready & clean to use
 %   cells0 = num2cell(zeros(size(interferers,2),1));
@@ -118,6 +119,8 @@ for i = 1:nData
       if interferers(iMicro).xy == antennaSmaller.xy
         interferers(iMicro).deployed = 0; % we do not want interference to be caused by our antennaSmaller
         antennaSmaller.id = iMicro;
+      else
+        interferers(iMicro).deployed = 1;
       end
       if interferers(iMicro).xy == antennaBigger.xy
         antennaBigger.id = iMicro;

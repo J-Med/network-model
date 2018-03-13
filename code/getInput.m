@@ -91,7 +91,7 @@ if scenarioSize ~= 12
   coords = csvread(scenarioPath,2,1);
   
 else
-  sink_xy = [0,0];
+  sink_xy = [300,1000];
   offset = sink_xy;
 
   sink_idx = 1;

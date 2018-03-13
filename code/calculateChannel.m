@@ -58,9 +58,9 @@ function temp_Kelvin = celsius2kelvin(temp_Celsius)
 end
 
 function thermalNoise_dBm = getThermalNoise_dBm(bandwidth_Hz, temp_Celsius)
-  bolzmanConst_JPerK = 1.38064852e-23;
+  boltzmannConst_JPerK = 1.38064852e-23;
   temp_Kelvin = celsius2kelvin(temp_Celsius);
-  thermalNoise_dBm = 10*log10(bolzmanConst_JPerK*temp_Kelvin*1000) + 10*log10(bandwidth_Hz);
+  thermalNoise_dBm = 10*log10(boltzmannConst_JPerK*temp_Kelvin*1000) + 10*log10(bandwidth_Hz);
 end
 
 function W = dBm2W(dBm)

@@ -14,9 +14,9 @@ if clusteringLevels~=2
   level
 end
 
-CONFIG.show = false;
+CONFIG.show = false; % show graphics?
 
-nAssignments2run = 10;
+nAssignments2run = 5; % number of times the network users will have reassigned categories (normal mode and restricted mode)
 
 nAssignments2run = nAssignments2run*2; %once as normal mode, once as restricted mode
 for iTmp = 1:2:nAssignments2run
@@ -58,7 +58,7 @@ if strcmp(ANTENNAS.hop{2}.technologyName,'wimax')
   ANTENNAS.hop{2}.gain.equipment{2}           = 15; % [dBm], gain 10-15
   ANTENNAS.hop{2}.radiatedPower.equipment{3} = 43; % [dBm], gain 15-20
   ANTENNAS.hop{2}.gain.equipment{3}           = 20; % [dBm], gain 15-20
-  ANTENNAS.hop{2}.bandwidth = 20e6; % [Hz] % what the whole equipment (including radio and antenna) supports
+  ANTENNAS.hop{2}.bandwidth = 10e6; % [Hz] % what the whole equipment (including radio and antenna) supports
   ANTENNAS.hop{2}.nBands = 11; % EU restricted, US
   ANTENNAS.hop{2}.nSlots = 15; % 3GPP
 else

@@ -44,29 +44,57 @@ fprintf('=====================================================\n\n')
 aboveMaxDelayIdx = delays1_ms(:,1)>maxDelays(:,up1down2);
 nAboveMaxDelay = sum(aboveMaxDelayIdx);
 
-onOff = 'off';
-if CONFIG.show
-  onOff = 'on';
+%%%%% Change these two for desired output %%%%%%%%%
+createFigure = false; %should figure for every execution be created?
+visibleOnOff = 'off'; % this will be set for figure parameter ('on' or 'off')s
+if createFigure
+  if CONFIG.show
+    visibleOnOff = 'on';
+  end
+  fig = figure('Name', 'Upstream results - blue=good, red=bad', 'Visible', visibleOnOff);
+  hold on;
+  plot(clustering{3}.nodeCoords(:,1), clustering{3}.nodeCoords(:,2), 'k^', 'linewidth', 2, 'markersize', 12);
+  plot(clustering{2}.nodeCoords(:,1), clustering{2}.nodeCoords(:,2), 'k+', 'linewidth', 2, 'markersize', 14);
+  plot(clustering{1}.nodeCoords(~aboveMaxDelayIdx,1), ...
+    clustering{1}.nodeCoords(~aboveMaxDelayIdx,2), 'bo', 'linewidth', 2, 'markersize', 1);
+  plot(clustering{1}.nodeCoords(aboveMaxDelayIdx,1), ...
+    clustering{1}.nodeCoords(aboveMaxDelayIdx,2), 'x', 'Color', [0.85 0 0], 'linewidth', 1, 'markersize', 6);
+  hold off;
+  legend({'\fontname{Times}\fontsize{13}Gateway', ...
+    '\fontname{Times}\fontsize{13}Access Point', ...
+    '\fontname{Times}\fontsize{13}Subscriber - sufficient QoS', ...
+    '\fontname{Times}\fontsize{13}Subscriber - insufficient QoS'},...
+    'Location', 'northeast',... %   'FontSize', 12,... %'Orientation','horizontal',...
+    'Interpreter', 'tex');
+  % legend('boxoff');
+  n1 = num2str(size(clustering{1}.nodeCoords,1));
+  n2 = num2str(size(clustering{2}.nodeCoords,1));
+  n3 = num2str(size(clustering{3}.nodeCoords,1));
+  hop1techRaw = hop{1}.technologyName;
+  hop1tech = '';
+  if strcmp('wimax',hop1techRaw)
+  hop1tech = 'WiMAX';
+  elseif strcmp('wifi',hop1techRaw)
+  hop1tech = 'Wi-Fi';
+  end
+  title({['\fontname{Times}\fontsize{14}Hop_1 technology: ',hop1tech];...
+    ['\fontname{Times}\fontsize{14}Subscribers: ',n1,',  Access Points: ',n2,',  Gateways: ',n3,]});
+ 
+  filename = sprintf('%04i',iRun);
+  set(fig,'Units','Inches');
+  pos = get(fig,'Position');
+  set(fig,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+  print(fig, [resultsPath filename], '-dpdf', '-r0');
+  if CONFIG.show % pause to see every figure
+    pause
+  end
+  close(fig);
 end
-fig = figure('Name', 'Upstream results - blue=good, red=bad', 'Visible', onOff);
-hold on;
-plot(clustering{1}.nodeCoords(aboveMaxDelayIdx,1), ...
-  clustering{1}.nodeCoords(aboveMaxDelayIdx,2), 'rx', 'linewidth', 1, 'markersize', 5);
-plot(clustering{1}.nodeCoords(~aboveMaxDelayIdx,1), ...
-  clustering{1}.nodeCoords(~aboveMaxDelayIdx,2), 'bx', 'linewidth', 1, 'markersize', 5);
-plot(clustering{2}.nodeCoords(:,1), clustering{2}.nodeCoords(:,2), 'k+', 'linewidth', 2, 'markersize', 10);
-plot(clustering{3}.nodeCoords(:,1), clustering{3}.nodeCoords(:,2), 'r^', 'linewidth', 2, 'markersize', 12);
-hold off;
-filename = sprintf('%04i',iRun);
-print([resultsPath filename], '-dpdf', '');
-if CONFIG.show
-  pause
-end
-close(fig);
-
 id = floor((iRun+1)/2);
+up1down2descriptionBase = {'uplink';'downlink'};
+up1down2description = up1down2descriptionBase(up1down2);
 if mod(iRun,2)==1 % regular mode
-  xlwrite([resultsPath summaryName], {id, up1down2, nAboveMaxDelay, '', size(maxDelays,1), ...
+  xlwrite([resultsPath summaryName], {id, up1down2description, nAboveMaxDelay, '', size(maxDelays,1), ...
     clustering{size(clustering,2)}.k_history(1), clustering{size(clustering,2)}.k_history(2), ...
     technique{:}, hop{1}.technologyName, hop{2}.technologyName, ...
     CONFIG.TDD_rates(1), CONFIG.TDD_rates(2), ...
@@ -74,6 +102,9 @@ if mod(iRun,2)==1 % regular mode
     1, sprintf('A%i',id+1));
 %saveResults(nAboveMaxDelay, aboveMaxDelayIdx, fig);
 else % restricted mode
+  % use either xlwrite or xlswrite, whatever works on your computer
+  % if xlwrite is to be used, use the addjavapath command to include all
+  % jars in xlwrite/poi_library
   xlwrite([resultsPath summaryName], nAboveMaxDelay, 1, sprintf('D%i',id+1));
 end
 end
